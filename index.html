@@ -1,0 +1,1626 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Group Inviter | Invitaciones Masivas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0f0d;
+            --bg-secondary: #111a16;
+            --bg-card: #152019;
+            --bg-elevated: #1a2b23;
+            --accent-primary: #25D366;
+            --accent-secondary: #128C7E;
+            --accent-glow: rgba(37, 211, 102, 0.3);
+            --text-primary: #f0f7f4;
+            --text-secondary: #8fa89b;
+            --text-muted: #5a7366;
+            --border-color: #2a3d33;
+            --danger: #ff4757;
+            --warning: #ffa502;
+            --success: #25D366;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --shadow-glow: 0 0 40px rgba(37, 211, 102, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* Animated background */
+        .bg-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.4;
+            background: 
+                radial-gradient(circle at 20% 20%, var(--accent-glow) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(18, 140, 126, 0.2) 0%, transparent 50%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 40px 0;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-glow);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .logo-icon svg {
+            width: 35px;
+            height: 35px;
+            fill: white;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent-primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            font-weight: 400;
+            margin-top: 10px;
+        }
+
+        /* Main Grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 25px;
+        }
+
+        @media (max-width: 900px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: var(--accent-secondary);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-elevated);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-icon svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--accent-primary);
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        /* Form Elements */
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .input-group {
+            margin-bottom: 18px;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        .input-row > * {
+            flex: 1;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 24px;
+            border: none;
+            border-radius: var(--radius-md);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px var(--accent-glow);
+        }
+
+        .btn-secondary {
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-card);
+            border-color: var(--accent-secondary);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            opacity: 0.9;
+        }
+
+        .btn-sm {
+            padding: 8px 14px;
+            font-size: 0.85rem;
+        }
+
+        .btn-block {
+            width: 100%;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        /* File Upload */
+        .file-upload {
+            position: relative;
+            border: 2px dashed var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 18px;
+        }
+
+        .file-upload:hover, .file-upload.dragover {
+            border-color: var(--accent-primary);
+            background: rgba(37, 211, 102, 0.05);
+        }
+
+        .file-upload input {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-upload-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--bg-elevated);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+        }
+
+        .file-upload-icon svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--accent-primary);
+        }
+
+        .file-upload-text {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .file-upload-text strong {
+            color: var(--accent-primary);
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        @media (max-width: 600px) {
+            .stats-bar {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .stat-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 18px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent-primary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+
+        /* Contact List */
+        .contact-list-wrapper {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            margin-top: 15px;
+        }
+
+        .contact-list-wrapper::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .contact-list-wrapper::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        .contact-list-wrapper::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.2s ease;
+        }
+
+        .contact-item:last-child {
+            border-bottom: none;
+        }
+
+        .contact-item:hover {
+            background: var(--bg-elevated);
+        }
+
+        .contact-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .contact-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-elevated);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: var(--accent-primary);
+            font-size: 0.9rem;
+        }
+
+        .contact-phone {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+        }
+
+        .contact-name {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .contact-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status-pending {
+            background: rgba(255, 165, 2, 0.15);
+            color: var(--warning);
+        }
+
+        .status-sent {
+            background: rgba(37, 211, 102, 0.15);
+            color: var(--success);
+        }
+
+        .status-error {
+            background: rgba(255, 71, 87, 0.15);
+            color: var(--danger);
+        }
+
+        .contact-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .contact-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: transparent;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .contact-btn svg {
+            width: 16px;
+            height: 16px;
+            stroke: var(--text-muted);
+        }
+
+        .contact-btn:hover {
+            background: var(--bg-card);
+        }
+
+        .contact-btn:hover svg {
+            stroke: var(--accent-primary);
+        }
+
+        .contact-btn.delete:hover svg {
+            stroke: var(--danger);
+        }
+
+        /* Progress Section */
+        .progress-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: var(--bg-secondary);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 5px;
+            transition: width 0.3s ease;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Group Link Section */
+        .group-link-section {
+            background: var(--bg-elevated);
+            border-radius: var(--radius-md);
+            padding: 18px;
+            margin-bottom: 18px;
+        }
+
+        .group-link-input {
+            display: flex;
+            gap: 10px;
+        }
+
+        .group-link-input input {
+            flex: 1;
+        }
+
+        /* Message Template */
+        .template-preview {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            padding: 15px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            white-space: pre-wrap;
+        }
+
+        .template-var {
+            background: var(--accent-glow);
+            color: var(--accent-primary);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state svg {
+            width: 60px;
+            height: 60px;
+            stroke: var(--border-color);
+            margin-bottom: 15px;
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideIn 0.3s ease;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .toast.success {
+            border-color: var(--success);
+        }
+
+        .toast.error {
+            border-color: var(--danger);
+        }
+
+        .toast-icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .toast.success .toast-icon {
+            stroke: var(--success);
+        }
+
+        .toast.error .toast-icon {
+            stroke: var(--danger);
+        }
+
+        /* Delay Settings */
+        .delay-settings {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .delay-input {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .delay-input input {
+            width: 80px;
+            text-align: center;
+        }
+
+        .delay-input span {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* Help Text */
+        .help-text {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .modal-close svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--text-muted);
+        }
+
+        /* Checkbox */
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .checkbox-group input {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--accent-primary);
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            cursor: pointer;
+        }
+
+        /* Instructions */
+        .instructions {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .instructions h4 {
+            color: var(--accent-primary);
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+        }
+
+        .instructions ol {
+            padding-left: 20px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .instructions li {
+            margin-bottom: 8px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        footer a {
+            color: var(--accent-primary);
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-pattern"></div>
+    
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1>WhatsApp Inviter</h1>
+                    <p class="subtitle">Invitaciones masivas a tu grupo</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Stats Bar -->
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-value" id="totalContacts">0</div>
+                <div class="stat-label">Total</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="pendingContacts">0</div>
+                <div class="stat-label">Pendientes</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="sentContacts">0</div>
+                <div class="stat-label">Enviados</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="errorContacts">0</div>
+                <div class="stat-label">Errores</div>
+            </div>
+        </div>
+
+        <div class="main-grid">
+            <!-- Left Column - Configuration -->
+            <div class="left-column">
+                <!-- Group Link Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+                            </svg>
+                        </div>
+                        <span class="card-title">Enlace del Grupo</span>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>URL de invitación al grupo</label>
+                        <input type="url" id="groupLink" placeholder="https://chat.whatsapp.com/AbCdEfGhIjK...">
+                        <p class="help-text">Obtén el enlace desde: Grupo → Configuración → Invitar mediante enlace</p>
+                    </div>
+                </div>
+
+                <!-- Message Template Card -->
+                <div class="card" style="margin-top: 20px;">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+                            </svg>
+                        </div>
+                        <span class="card-title">Mensaje de Invitación</span>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Plantilla del mensaje</label>
+                        <textarea id="messageTemplate" rows="4">¡Hola! 👋
+
+Te invito a unirte a nuestro grupo de WhatsApp:
+
+{GROUP_LINK}
+
+¡Te esperamos! 🎉</textarea>
+                        <p class="help-text">Usa <span class="template-var">{GROUP_LINK}</span> para insertar el enlace automáticamente</p>
+                    </div>
+                </div>
+
+                <!-- Settings Card -->
+                <div class="card" style="margin-top: 20px;">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                        </div>
+                        <span class="card-title">Configuración</span>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Prefijo de país por defecto</label>
+                        <select id="defaultCountry">
+                            <option value="+34">🇪🇸 España (+34)</option>
+                            <option value="+1">🇺🇸 USA (+1)</option>
+                            <option value="+52">🇲🇽 México (+52)</option>
+                            <option value="+54">🇦🇷 Argentina (+54)</option>
+                            <option value="+57">🇨🇴 Colombia (+57)</option>
+                            <option value="+56">🇨🇱 Chile (+56)</option>
+                            <option value="+51">🇵🇪 Perú (+51)</option>
+                            <option value="+58">🇻🇪 Venezuela (+58)</option>
+                            <option value="+593">🇪🇨 Ecuador (+593)</option>
+                            <option value="+55">🇧🇷 Brasil (+55)</option>
+                            <option value="+44">🇬🇧 Reino Unido (+44)</option>
+                            <option value="+33">🇫🇷 Francia (+33)</option>
+                            <option value="+49">🇩🇪 Alemania (+49)</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Retardo entre mensajes</label>
+                        <div class="delay-settings">
+                            <div class="delay-input">
+                                <input type="number" id="delayMin" value="5" min="1" max="60">
+                                <span>seg. mín</span>
+                            </div>
+                            <div class="delay-input">
+                                <input type="number" id="delayMax" value="15" min="1" max="120">
+                                <span>seg. máx</span>
+                            </div>
+                        </div>
+                        <p class="help-text">Retardo aleatorio entre cada envío para evitar bloqueos</p>
+                    </div>
+
+                    <div class="checkbox-group" style="margin-top: 15px;">
+                        <input type="checkbox" id="openInNewTab" checked>
+                        <label for="openInNewTab">Abrir WhatsApp en nueva pestaña</label>
+                    </div>
+                </div>
+
+                <!-- Instructions -->
+                <div class="instructions">
+                    <h4>📋 Instrucciones de uso</h4>
+                    <ol>
+                        <li>Pega el enlace de invitación de tu grupo</li>
+                        <li>Carga contactos desde CSV o añádelos manualmente</li>
+                        <li>Personaliza el mensaje de invitación</li>
+                        <li>Haz clic en "Iniciar Envío" para comenzar</li>
+                        <li>Confirma cada mensaje en la pestaña de WhatsApp</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Right Column - Contacts -->
+            <div class="right-column">
+                <!-- Add Contacts Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                            </svg>
+                        </div>
+                        <span class="card-title">Añadir Contactos</span>
+                    </div>
+
+                    <!-- File Upload -->
+                    <div class="file-upload" id="dropZone">
+                        <input type="file" id="csvFile" accept=".csv,.txt">
+                        <div class="file-upload-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                            </svg>
+                        </div>
+                        <p class="file-upload-text">
+                            <strong>Arrastra un archivo CSV</strong> o haz clic para seleccionar<br>
+                            <small>Formato: número por línea o CSV con columna "phone"</small>
+                        </p>
+                    </div>
+
+                    <!-- Manual Add -->
+                    <div class="input-group">
+                        <label>Añadir número manualmente</label>
+                        <div class="input-row">
+                            <input type="text" id="manualPhone" placeholder="612345678">
+                            <input type="text" id="manualName" placeholder="Nombre (opcional)">
+                            <button class="btn btn-secondary" onclick="addManualContact()">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="18" height="18">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Bulk Add -->
+                    <div class="input-group">
+                        <label>Añadir múltiples números (uno por línea)</label>
+                        <textarea id="bulkNumbers" rows="3" placeholder="612345678&#10;698765432&#10;+34666111222"></textarea>
+                        <button class="btn btn-secondary btn-block" onclick="addBulkContacts()" style="margin-top: 10px;">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="18" height="18">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                            </svg>
+                            Añadir todos
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Contact List Card -->
+                <div class="card" style="margin-top: 20px;">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                            </svg>
+                        </div>
+                        <span class="card-title">Lista de Contactos</span>
+                        <div style="margin-left: auto; display: flex; gap: 8px;">
+                            <button class="btn btn-sm btn-secondary" onclick="exportContacts()">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="16" height="16">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                </svg>
+                                Exportar
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="clearAllContacts()">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="16" height="16">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="contact-list-wrapper" id="contactListWrapper">
+                        <div class="empty-state" id="emptyState">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                            <p>No hay contactos añadidos</p>
+                            <p><small>Carga un CSV o añade números manualmente</small></p>
+                        </div>
+                        <div id="contactList"></div>
+                    </div>
+
+                    <!-- Progress Section -->
+                    <div class="progress-section" id="progressSection" style="display: none;">
+                        <div class="progress-header">
+                            <span id="progressText">Progreso: 0 de 0</span>
+                            <span id="progressPercent">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="btn-group">
+                        <button class="btn btn-primary btn-block" id="startBtn" onclick="startSending()">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="18" height="18">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            Iniciar Envío
+                        </button>
+                        <button class="btn btn-secondary" id="pauseBtn" onclick="togglePause()" style="display: none;">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="18" height="18">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </button>
+                        <button class="btn btn-danger" id="stopBtn" onclick="stopSending()" style="display: none;">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="18" height="18">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>WhatsApp Group Inviter &copy; 2025 | Hecho con ❤️ para <a href="#">MuroSocial</a></p>
+            <p style="margin-top: 8px; font-size: 0.75rem;">⚠️ Usa esta herramienta de forma responsable. El envío masivo puede resultar en bloqueos temporales.</p>
+        </footer>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        // State Management
+        let contacts = [];
+        let currentIndex = 0;
+        let isSending = false;
+        let isPaused = false;
+        let sendInterval = null;
+
+        // Load saved data from localStorage
+        function loadSavedData() {
+            const savedContacts = localStorage.getItem('wa_inviter_contacts');
+            const savedGroupLink = localStorage.getItem('wa_inviter_group_link');
+            const savedMessage = localStorage.getItem('wa_inviter_message');
+            const savedCountry = localStorage.getItem('wa_inviter_country');
+            
+            if (savedContacts) {
+                contacts = JSON.parse(savedContacts);
+                renderContactList();
+                updateStats();
+            }
+            if (savedGroupLink) {
+                document.getElementById('groupLink').value = savedGroupLink;
+            }
+            if (savedMessage) {
+                document.getElementById('messageTemplate').value = savedMessage;
+            }
+            if (savedCountry) {
+                document.getElementById('defaultCountry').value = savedCountry;
+            }
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('wa_inviter_contacts', JSON.stringify(contacts));
+            localStorage.setItem('wa_inviter_group_link', document.getElementById('groupLink').value);
+            localStorage.setItem('wa_inviter_message', document.getElementById('messageTemplate').value);
+            localStorage.setItem('wa_inviter_country', document.getElementById('defaultCountry').value);
+        }
+
+        // Normalize phone number
+        function normalizePhone(phone) {
+            // Remove all non-numeric characters except +
+            let cleaned = phone.replace(/[^\d+]/g, '');
+            
+            // If it doesn't start with +, add default country code
+            if (!cleaned.startsWith('+')) {
+                const defaultCountry = document.getElementById('defaultCountry').value;
+                // Remove leading zeros
+                cleaned = cleaned.replace(/^0+/, '');
+                cleaned = defaultCountry + cleaned;
+            }
+            
+            return cleaned;
+        }
+
+        // Validate phone number
+        function isValidPhone(phone) {
+            const normalized = normalizePhone(phone);
+            // Basic validation: should have country code + at least 6 digits
+            return /^\+\d{7,15}$/.test(normalized);
+        }
+
+        // Add single contact
+        function addContact(phone, name = '') {
+            const normalized = normalizePhone(phone);
+            
+            // Check if already exists
+            if (contacts.find(c => c.phone === normalized)) {
+                showToast('Este número ya está en la lista', 'error');
+                return false;
+            }
+            
+            if (!isValidPhone(phone)) {
+                showToast('Número de teléfono inválido', 'error');
+                return false;
+            }
+            
+            contacts.push({
+                id: Date.now() + Math.random(),
+                phone: normalized,
+                name: name.trim(),
+                status: 'pending'
+            });
+            
+            renderContactList();
+            updateStats();
+            saveData();
+            return true;
+        }
+
+        // Add manual contact
+        function addManualContact() {
+            const phone = document.getElementById('manualPhone').value.trim();
+            const name = document.getElementById('manualName').value.trim();
+            
+            if (!phone) {
+                showToast('Introduce un número de teléfono', 'error');
+                return;
+            }
+            
+            if (addContact(phone, name)) {
+                document.getElementById('manualPhone').value = '';
+                document.getElementById('manualName').value = '';
+                showToast('Contacto añadido correctamente', 'success');
+            }
+        }
+
+        // Add bulk contacts
+        function addBulkContacts() {
+            const textarea = document.getElementById('bulkNumbers');
+            const lines = textarea.value.split('\n').filter(line => line.trim());
+            
+            if (lines.length === 0) {
+                showToast('No hay números para añadir', 'error');
+                return;
+            }
+            
+            let added = 0;
+            let skipped = 0;
+            
+            lines.forEach(line => {
+                // Support format: phone,name or just phone
+                const parts = line.split(',');
+                const phone = parts[0].trim();
+                const name = parts[1]?.trim() || '';
+                
+                if (phone && isValidPhone(phone)) {
+                    const normalized = normalizePhone(phone);
+                    if (!contacts.find(c => c.phone === normalized)) {
+                        contacts.push({
+                            id: Date.now() + Math.random(),
+                            phone: normalized,
+                            name: name,
+                            status: 'pending'
+                        });
+                        added++;
+                    } else {
+                        skipped++;
+                    }
+                } else {
+                    skipped++;
+                }
+            });
+            
+            renderContactList();
+            updateStats();
+            saveData();
+            textarea.value = '';
+            
+            showToast(`${added} contactos añadidos, ${skipped} omitidos`, added > 0 ? 'success' : 'error');
+        }
+
+        // Handle CSV file upload
+        document.getElementById('csvFile').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const content = event.target.result;
+                parseCSV(content);
+            };
+            reader.readAsText(file);
+        });
+
+        // Parse CSV content
+        function parseCSV(content) {
+            const lines = content.split('\n').filter(line => line.trim());
+            if (lines.length === 0) {
+                showToast('El archivo está vacío', 'error');
+                return;
+            }
+            
+            let added = 0;
+            let skipped = 0;
+            
+            // Check if first line is header
+            const firstLine = lines[0].toLowerCase();
+            const hasHeader = firstLine.includes('phone') || firstLine.includes('telefono') || firstLine.includes('número');
+            const startIndex = hasHeader ? 1 : 0;
+            
+            // Find phone and name column indices
+            let phoneIndex = 0;
+            let nameIndex = -1;
+            
+            if (hasHeader) {
+                const headers = firstLine.split(/[,;\t]/).map(h => h.trim());
+                phoneIndex = headers.findIndex(h => 
+                    h.includes('phone') || h.includes('telefono') || h.includes('número') || h.includes('mobile')
+                );
+                nameIndex = headers.findIndex(h => 
+                    h.includes('name') || h.includes('nombre')
+                );
+                if (phoneIndex === -1) phoneIndex = 0;
+            }
+            
+            for (let i = startIndex; i < lines.length; i++) {
+                const parts = lines[i].split(/[,;\t]/);
+                const phone = parts[phoneIndex]?.trim();
+                const name = nameIndex >= 0 ? parts[nameIndex]?.trim() : '';
+                
+                if (phone && isValidPhone(phone)) {
+                    const normalized = normalizePhone(phone);
+                    if (!contacts.find(c => c.phone === normalized)) {
+                        contacts.push({
+                            id: Date.now() + Math.random(),
+                            phone: normalized,
+                            name: name || '',
+                            status: 'pending'
+                        });
+                        added++;
+                    } else {
+                        skipped++;
+                    }
+                } else {
+                    skipped++;
+                }
+            }
+            
+            renderContactList();
+            updateStats();
+            saveData();
+            
+            showToast(`CSV procesado: ${added} añadidos, ${skipped} omitidos`, added > 0 ? 'success' : 'error');
+        }
+
+        // Drag and drop
+        const dropZone = document.getElementById('dropZone');
+        
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+        
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+        
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            
+            const file = e.dataTransfer.files[0];
+            if (file && (file.name.endsWith('.csv') || file.name.endsWith('.txt'))) {
+                const reader = new FileReader();
+                reader.onload = (event) => parseCSV(event.target.result);
+                reader.readAsText(file);
+            } else {
+                showToast('Por favor, sube un archivo CSV o TXT', 'error');
+            }
+        });
+
+        // Render contact list
+        function renderContactList() {
+            const listContainer = document.getElementById('contactList');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (contacts.length === 0) {
+                emptyState.style.display = 'block';
+                listContainer.innerHTML = '';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            
+            listContainer.innerHTML = contacts.map((contact, index) => `
+                <div class="contact-item" data-id="${contact.id}">
+                    <div class="contact-info">
+                        <div class="contact-avatar">${contact.name ? contact.name.charAt(0).toUpperCase() : '#'}</div>
+                        <div>
+                            <div class="contact-phone">${contact.phone}</div>
+                            ${contact.name ? `<div class="contact-name">${contact.name}</div>` : ''}
+                        </div>
+                    </div>
+                    <div class="contact-status">
+                        <span class="status-badge status-${contact.status}">
+                            ${contact.status === 'pending' ? 'Pendiente' : contact.status === 'sent' ? 'Enviado' : 'Error'}
+                        </span>
+                        <div class="contact-actions">
+                            <button class="contact-btn" onclick="sendToContact(${index})" title="Enviar ahora">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                                </svg>
+                            </button>
+                            <button class="contact-btn delete" onclick="deleteContact('${contact.id}')" title="Eliminar">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Delete contact
+        function deleteContact(id) {
+            contacts = contacts.filter(c => c.id != id);
+            renderContactList();
+            updateStats();
+            saveData();
+        }
+
+        // Clear all contacts
+        function clearAllContacts() {
+            if (contacts.length === 0) return;
+            
+            if (confirm('¿Estás seguro de que quieres eliminar todos los contactos?')) {
+                contacts = [];
+                renderContactList();
+                updateStats();
+                saveData();
+                showToast('Todos los contactos eliminados', 'success');
+            }
+        }
+
+        // Export contacts
+        function exportContacts() {
+            if (contacts.length === 0) {
+                showToast('No hay contactos para exportar', 'error');
+                return;
+            }
+            
+            const csv = 'phone,name,status\n' + contacts.map(c => 
+                `${c.phone},${c.name || ''},${c.status}`
+            ).join('\n');
+            
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `whatsapp_contacts_${new Date().toISOString().slice(0,10)}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            showToast('Contactos exportados', 'success');
+        }
+
+        // Update stats
+        function updateStats() {
+            const total = contacts.length;
+            const pending = contacts.filter(c => c.status === 'pending').length;
+            const sent = contacts.filter(c => c.status === 'sent').length;
+            const errors = contacts.filter(c => c.status === 'error').length;
+            
+            document.getElementById('totalContacts').textContent = total;
+            document.getElementById('pendingContacts').textContent = pending;
+            document.getElementById('sentContacts').textContent = sent;
+            document.getElementById('errorContacts').textContent = errors;
+        }
+
+        // Generate WhatsApp URL
+        function generateWhatsAppUrl(phone, message) {
+            const encodedMessage = encodeURIComponent(message);
+            // Remove + for wa.me format
+            const cleanPhone = phone.replace('+', '');
+            return `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
+        }
+
+        // Send to single contact
+        function sendToContact(index) {
+            const contact = contacts[index];
+            if (!contact) return;
+            
+            const groupLink = document.getElementById('groupLink').value.trim();
+            if (!groupLink) {
+                showToast('Configura el enlace del grupo primero', 'error');
+                return;
+            }
+            
+            const messageTemplate = document.getElementById('messageTemplate').value;
+            const message = messageTemplate.replace('{GROUP_LINK}', groupLink);
+            
+            const url = generateWhatsAppUrl(contact.phone, message);
+            
+            const openInNewTab = document.getElementById('openInNewTab').checked;
+            if (openInNewTab) {
+                window.open(url, '_blank');
+            } else {
+                window.location.href = url;
+            }
+            
+            // Mark as sent
+            contacts[index].status = 'sent';
+            renderContactList();
+            updateStats();
+            saveData();
+        }
+
+        // Start sending process
+        function startSending() {
+            const groupLink = document.getElementById('groupLink').value.trim();
+            if (!groupLink) {
+                showToast('Configura el enlace del grupo primero', 'error');
+                return;
+            }
+            
+            const pendingContacts = contacts.filter(c => c.status === 'pending');
+            if (pendingContacts.length === 0) {
+                showToast('No hay contactos pendientes', 'error');
+                return;
+            }
+            
+            isSending = true;
+            isPaused = false;
+            currentIndex = contacts.findIndex(c => c.status === 'pending');
+            
+            // Update UI
+            document.getElementById('startBtn').style.display = 'none';
+            document.getElementById('pauseBtn').style.display = 'inline-flex';
+            document.getElementById('stopBtn').style.display = 'inline-flex';
+            document.getElementById('progressSection').style.display = 'block';
+            
+            processNextContact();
+        }
+
+        // Process next contact
+        function processNextContact() {
+            if (!isSending || isPaused) return;
+            
+            // Find next pending contact
+            const pendingIndex = contacts.findIndex((c, i) => i >= currentIndex && c.status === 'pending');
+            
+            if (pendingIndex === -1) {
+                // All done
+                stopSending();
+                showToast('¡Proceso completado!', 'success');
+                return;
+            }
+            
+            currentIndex = pendingIndex;
+            
+            // Update progress
+            const total = contacts.length;
+            const processed = contacts.filter(c => c.status !== 'pending').length;
+            const percent = Math.round((processed / total) * 100);
+            
+            document.getElementById('progressText').textContent = `Progreso: ${processed} de ${total}`;
+            document.getElementById('progressPercent').textContent = `${percent}%`;
+            document.getElementById('progressFill').style.width = `${percent}%`;
+            
+            // Send to current contact
+            sendToContact(currentIndex);
+            currentIndex++;
+            
+            // Calculate random delay
+            const minDelay = parseInt(document.getElementById('delayMin').value) * 1000;
+            const maxDelay = parseInt(document.getElementById('delayMax').value) * 1000;
+            const delay = Math.random() * (maxDelay - minDelay) + minDelay;
+            
+            // Schedule next
+            sendInterval = setTimeout(processNextContact, delay);
+        }
+
+        // Toggle pause
+        function togglePause() {
+            isPaused = !isPaused;
+            const pauseBtn = document.getElementById('pauseBtn');
+            
+            if (isPaused) {
+                pauseBtn.innerHTML = `
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="18" height="18">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                `;
+                clearTimeout(sendInterval);
+                showToast('Proceso pausado', 'success');
+            } else {
+                pauseBtn.innerHTML = `
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="18" height="18">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                `;
+                processNextContact();
+                showToast('Proceso reanudado', 'success');
+            }
+        }
+
+        // Stop sending
+        function stopSending() {
+            isSending = false;
+            isPaused = false;
+            clearTimeout(sendInterval);
+            
+            // Update UI
+            document.getElementById('startBtn').style.display = 'inline-flex';
+            document.getElementById('pauseBtn').style.display = 'none';
+            document.getElementById('stopBtn').style.display = 'none';
+            
+            // Reset pause button
+            document.getElementById('pauseBtn').innerHTML = `
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="18" height="18">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+            `;
+        }
+
+        // Show toast notification
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `
+                <svg class="toast-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    ${type === 'success' 
+                        ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>'
+                        : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>'
+                    }
+                </svg>
+                <span>${message}</span>
+            `;
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideIn 0.3s ease reverse';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Auto-save on input changes
+        document.getElementById('groupLink').addEventListener('change', saveData);
+        document.getElementById('messageTemplate').addEventListener('change', saveData);
+        document.getElementById('defaultCountry').addEventListener('change', saveData);
+
+        // Handle Enter key for manual input
+        document.getElementById('manualPhone').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                addManualContact();
+            }
+        });
+
+        // Initialize
+        loadSavedData();
+    </script>
+</body>
+</html>
